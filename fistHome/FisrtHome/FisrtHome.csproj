@@ -39,8 +39,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EIS.AppBase">
+      <HintPath>..\refdll\EIS.AppBase.dll</HintPath>
+    </Reference>
+    <Reference Include="EIS.AppDAC">
+      <HintPath>..\refdll\EIS.AppDAC.dll</HintPath>
+    </Reference>
+    <Reference Include="EIS.AppModel">
+      <HintPath>..\refdll\EIS.AppModel.dll</HintPath>
+    </Reference>
+    <Reference Include="EIS.Common">
+      <HintPath>..\refdll\EIS.Common.dll</HintPath>
+    </Reference>
     <Reference Include="EIS.DataAccess">
       <HintPath>..\refdll\EIS.DataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="EIS.Permission">
+      <HintPath>..\refdll\EIS.Permission.dll</HintPath>
+    </Reference>
+    <Reference Include="EIS.WebBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\refdll\EIS.WebBase.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -69,10 +88,32 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="jzfbread.aspx" />
+    <Content Include="jzgsread.aspx" />
+    <Content Include="jzzclist.html" />
+    <Content Include="jzzcfb.html" />
+    <Content Include="jzzcread.aspx" />
+    <Content Include="jzxxlist.html" />
+    <Content Include="notice.html" />
+    <Content Include="newswithbk.html" />
+    <Content Include="news.html" />
+    <Content Include="jzxxfb.html" />
+    <Content Include="jzgs.html" />
+    <Content Include="notice和新闻合并.html" />
     <Content Include="console.html" />
     <Content Include="getFirstHomeInfo.ashx" />
     <Content Include="getNotice.ashx" />
     <Content Include="getwfdata.ashx" />
+    <Content Include="getdw.ashx" />
+    <Content Include="getJZGS.ashx" />
+    <Content Include="getCategory.ashx" />
+    <Content Include="getNewListByCategory.ashx" />
+    <Content Include="getjzfl.ashx" />
+    <Content Include="getjzxxfbbylb.ashx" />
+    <Content Include="getjzzcfl.ashx" />
+    <Content Include="getjzzcbylb.ashx" />
+    <Content Include="getNoticeByPage.ashx" />
+    <Content Include="getTransFw.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -81,19 +122,72 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="selectDw - 复制.html" />
+    <Content Include="selectDw.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="getCategory.ashx.cs">
+      <DependentUpon>getCategory.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="getdw.ashx.cs">
+      <DependentUpon>getdw.ashx</DependentUpon>
+    </Compile>
     <Compile Include="getFirstHomeInfo.ashx.cs">
       <DependentUpon>getFirstHomeInfo.ashx</DependentUpon>
     </Compile>
+    <Compile Include="getjzfl.ashx.cs">
+      <DependentUpon>getjzfl.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="getJZGS.ashx.cs">
+      <DependentUpon>getJZGS.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="getjzxxfbbylb.ashx.cs">
+      <DependentUpon>getjzxxfbbylb.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="getjzzcbylb.ashx.cs">
+      <DependentUpon>getjzzcbylb.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="getjzzcfl.ashx.cs">
+      <DependentUpon>getjzzcfl.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="getNewListByCategory.ashx.cs">
+      <DependentUpon>getNewListByCategory.ashx</DependentUpon>
+    </Compile>
     <Compile Include="getNotice.ashx.cs">
       <DependentUpon>getNotice.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="getNoticeByPage.ashx.cs">
+      <DependentUpon>getNoticeByPage.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="getTransFw.ashx.cs">
+      <DependentUpon>getTransFw.ashx</DependentUpon>
     </Compile>
     <Compile Include="getwfdata.ashx.cs">
       <DependentUpon>getwfdata.ashx</DependentUpon>
     </Compile>
     <Compile Include="JJNWfEvent.cs" />
+    <Compile Include="jzfbread.aspx.cs">
+      <DependentUpon>jzfbread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="jzfbread.aspx.designer.cs">
+      <DependentUpon>jzfbread.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="jzgsread.aspx.cs">
+      <DependentUpon>jzgsread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="jzgsread.aspx.designer.cs">
+      <DependentUpon>jzgsread.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="jzzcread.aspx.cs">
+      <DependentUpon>jzzcread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="jzzcread.aspx.designer.cs">
+      <DependentUpon>jzzcread.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>

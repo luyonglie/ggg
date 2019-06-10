@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title></title>
     <link href="../../../bootstrsp3.7/css/bootstrap.css" rel="stylesheet" />
-    <link href="../../../easyui1.6/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../../../easyui1.6/themes/material/easyui.css" rel="stylesheet" />
     <script src="../../../bootstrsp3.7/jquery.min.js"></script>
     <script src="../../../bootstrsp3.7/bootstrap.min.js"></script>
     <script src="../../../easyui1.6/jquery.easyui.min.js"></script>
@@ -19,45 +19,59 @@
             margin: 0 -10px 20px;
             overflow: hidden;
         }
-        .bs-glyphicons li {
-    width: 12.5%;
-    font-size: 12px;
-}
-.bs-glyphicons li {
-    float: left;
-    display:  block;
-     
-    width: 25%;
-    height: 115px;
-    padding: 10px;
-    font-size: 10px;
-    line-height: 1.4;
-    text-align: center;
-    background-color: #f9f9f9;
-    border: 1px solid #fff;
-}
 
- .bs-glyphicons .glyphicon {
-    margin-top: 5px;
-    margin-bottom: 10px;
-    font-size: 24px;
-}
-.glyphicon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-.bs-glyphicons .glyphicon-class {
-    display: block;
-    text-align: center;
-    word-wrap: break-word;
-}
+            .bs-glyphicons li {
+                width: 12.5%;
+                font-size: 12px;
+            }
+
+            .bs-glyphicons li {
+                float: left;
+                display: block;
+                width: 25%;
+                height: 115px;
+                padding: 10px;
+                font-size: 10px;
+                line-height: 1.4;
+                text-align: center;
+                background-color: #f9f9f9;
+                border: 1px solid #fff;
+            }
+
+            .bs-glyphicons .glyphicon {
+                margin-top: 5px;
+                margin-bottom: 10px;
+                font-size: 24px;
+            }
+
+        .glyphicon {
+            position: relative;
+            top: 1px;
+            display: inline-block;
+            font-family: 'Glyphicons Halflings';
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .bs-glyphicons .glyphicon-class {
+            display: block;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        ..col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4,
+        .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+            padding-left: 1px;
+            padding-right: 1px;
+        }
+
+        .col-md-6, .col-md-12 {
+            padding-left: 1px;
+            padding-right: 1px;
+        }
     </style>
     <script type="text/javascript">
         //格式化日期，仅年月
@@ -79,11 +93,11 @@
                 e.preventDefault();
                 $(this).tab('show');
                 getwfdata();
-              
+
             });
 
 
-            
+
             $('#monthTimeStart').datebox({
                 onShowPanel: function () { //显示日趋选择对象后再触发弹出月份层的事件，初始化时没有生成月份层
                     var p = $('#monthTimeStart').datebox('panel'), //日期选择对象
@@ -115,7 +129,7 @@
                     var currentMonthStr = currentMonth < 10 ? ('0' + currentMonth) : (currentMonth + '');
                     return d.getFullYear() + '-' + currentMonthStr;
                 },
-                 
+
             });
 
 
@@ -149,7 +163,7 @@
                     var currentMonth = (d.getMonth() + 1);
                     var currentMonthStr = currentMonth < 10 ? ('0' + currentMonth) : (currentMonth + '');
                     return d.getFullYear() + '-' + currentMonthStr;
-                } 
+                }
             });
             $('.textbox-value').on("change", function () {
                 alert(1);
@@ -171,26 +185,62 @@
                 d = JSON.parse(d);
 
                 var html = '', htmlJjn = "", htmlLsjz = "", htmlZB = "", htmlZj = "";
-                var jjnc = 0, lsjzc = 0, zbc = 0, zjc = 0;
-                for (var i = 0; i < d.count; i++) {
+                var count = d.data.length;
+                var totalcount = 0, jjnc = 0, lsjzc = 0, zbc = 0, zjc = 0;
+                for (var i = 0; i < count; i++) {
                     var one = d.data[i];
-                    html += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
+                    totalcount++;
+                    if (totalcount < 6) {
+                        html += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
+                    }
                     switch (one.BizType) {
-                        case "救济难":
-                            htmlJjn += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
+                        case "救急难":
                             jjnc++;
+                            if (jjnc < 6) {
+                                htmlJjn += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
+                            }
                             break;
                         case "临时救助":
-                            htmlLsjz += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
                             lsjzc++;
+                            if (lsjzc < 6) {
+                                htmlLsjz += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
+                            }
                             break;
                         case "转办":
-                            htmlZB += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
                             zbc++;
+                            if (zbc < 6) {
+                                htmlZB += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
+                            }
                             break;
                         case "转介":
-                            htmlZj += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
                             zjc++;
+                            if (zjc < 6) {
+                                htmlZj += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.title + '</a>';
+                            }
+                            break;
+                        default:
+
+                            break;
+                    }
+
+                }
+                totalcount = 0, jjnc = 0, lsjzc = 0, zbc = 0, zjc = 0;
+                count = d.count.length;
+                for (var i = 0; i < count; i++) {
+                    var one = d.count[i];
+                    totalcount += one.ct;
+                    switch (one.BizType) {
+                        case "救急难":
+                            jjnc = one.ct;
+                            break;
+                        case "临时救助":
+                            lsjzc = one.ct;
+                            break;
+                        case "转办":
+                            zbc = one.ct;
+                            break;
+                        case "转介":
+                            zjc = one.ct;
                             break;
                         default:
                     }
@@ -201,8 +251,8 @@
                 $("#messages").find(".list-group").html(htmlLsjz);
                 $("#settings").find(".list-group").html(htmlZB);
                 $("#zhuanjie").find(".list-group").html(htmlZj);
-                $("[aria-controls='home']").text("全部(" + d.count + ")");
-                $("[aria-controls='profile']").text("救济难(" + jjnc + ")");
+                $("[aria-controls='home']").text("全部(" + totalcount + ")");
+                $("[aria-controls='profile']").text("救急难(" + jjnc + ")");
                 $("[aria-controls='messages']").text("临时救助(" + lsjzc + ")");
                 $("[aria-controls='settings']").text("转办(" + zbc + ")");
                 $("[aria-controls='zhuanjie']").text("转介(" + zjc + ")");
@@ -214,7 +264,7 @@
                 var html = '';
                 for (var i = 0; i < d.count; i++) {
                     var one = d.data[i];
-                    html += '<a  target="_blank" href="../../../SysFolder/Workflow/dealflow.aspx?taskId=' + one.taskId + '" class="list-group-item">' + one.Title + '</a>';
+                    html += '<a  target="_blank" href="../../../Workasp/News/NoteRead.aspx?newsId=' + one._AutoID + '" class="list-group-item">' + one.Title + '</a>';
 
                 }
                 $("#notice").html(html);
@@ -225,14 +275,14 @@
         function getwfdata() {
             var start = $('#monthTimeStart').datebox('getValue');
             var end = $('#monthTimeEnd').datebox('getValue');
-            var type = "救济难";
+            var type = "救急难";
             $('#nav li').each(function () {
                 if ($(this).hasClass("active")) {
                     type = $(this).text();
-                } 
+                }
 
             });
-            $.get("../../../getwfdata.ashx", { start: start, end: end, type:type }, function (d) {
+            $.get("../../../getwfdata.ashx", { start: start, end: end, type: type }, function (d) {
                 d = JSON.parse(d);
 
                 $('#handledata').datagrid({
@@ -246,7 +296,7 @@
 
         }
 
-        function createchart(d  ) {
+        function createchart(d) {
 
             //  series: { name: "必填",field:"必填，对应值字段", type :"默认bar"}
 
@@ -255,15 +305,15 @@
             var xAxis = [], legend = [], seriesRatio = [];
             var rows = d.rows;
             var totalLength = d.rows.length;
-            var maptotal = {},mapsuccess = {} ;
+            var maptotal = {}, mapsuccess = {};
             var totalsucess = 0, totalrunning = 0, totalfall = 0;
             for (var i = 0; i < totalLength; i++) {
                 var onerow = rows[i];
                 var month = onerow.YWRQ.substr(5, 2);
                 if (xAxis.indexOf(month) < 0) {
                     xAxis.push(month);
-                   
-                } 
+
+                }
                 if (maptotal[month] === undefined) {
                     maptotal[month] = 1;
                 }
@@ -283,13 +333,13 @@
                 }
             }
             var series = [{
-                name: '总传单数', 
+                name: '总传单数',
             }, {
-                    name: '成功率', 
-                }];
+                name: '成功率',
+            }];
             for (var k = 0; k < series.length; k++) {
                 var charttype = "bar";
-                if (k>0) {
+                if (k > 0) {
                     charttype = "line";
                 }
                 var seria = $.extend({
@@ -300,7 +350,7 @@
                             position: 'inside'
                         }
                     },
-                    itemStyle: { 
+                    itemStyle: {
                         emphasis: {
                             color: new echarts.graphic.LinearGradient(
                                 0, 0, 0, 1,
@@ -328,7 +378,7 @@
                             bl = 0;
                         }
                         seria.data.push(bl);
-                     
+
                     }
                     else {
                         seria.data.push(maptotal[month]);
@@ -373,7 +423,7 @@
                 },
                 series: seriesRatio
             };
-            
+
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
 
@@ -396,7 +446,7 @@
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist">
                                 <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">全部</a></li>
-                                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">救济难</a></li>
+                                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">救急难</a></li>
                                 <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">临时救助</a></li>
                                 <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">转办</a></li>
                                 <li role="presentation"><a href="#zhuanjie" aria-controls="zhuanjie" role="tab" data-toggle="tab">转介</a></li>
@@ -452,7 +502,7 @@
 
                 <div class="panel panel-info">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">新闻公告<span style="float:right"><a target="_blank" href="../../../SysFolder/WorkFlow/flowToDo.aspx">更多>></a></span></div>
+                    <div class="panel-heading">通知公告<span style="float:right"><a target="_blank" href="../../../notice.html">更多>></a></span></div>
                     <div class="panel-body" style="height:270px">
 
                         <div class="list-group" id="notice">
@@ -471,44 +521,50 @@
             <div class="col-md-12">
                 <div class="panel panel-info">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">数据概览     <input id="monthTimeStart" style="width:160px;height:30px" />~<input id="monthTimeEnd" style="width:160px;height:30px" /></div>
+                    <div class="panel-heading">数据概览    <span style="display:none">  <input id="monthTimeStart" style="width:160px;height:30px" />~<input id="monthTimeEnd" style="width:160px;height:30px" /></span></div>
                     <div class="panel-body">
                         <div>
                             <div class="col-md-2">
                                 <ul id="nav" class="nav nav-pills nav-stacked">
-                                    <li role="presentation" class="active"><a href="#">救济难</a></li>
+                                    <li role="presentation" class="active"><a href="#">救急难</a></li>
                                     <li role="presentation"><a href="#">临时救助</a></li>
                                     <li role="presentation"><a href="#">转办</a></li>
                                     <li role="presentation"><a href="#">转介</a></li>
-                                </ul> 
+                                </ul>
                             </div>
                             <div class="col-md-5">
                                 <!-- Nav tabs -->
                                 <div class="col-md-4 center-block ">
                                     <div id="totalSuccess" style="font-size:30px; font-weight:bold;color:blue;">225</div>
-                                    <div  style="font-size:20px; color: burlywood;">成功数</div>
+                                    <div style="font-size:20px; color: burlywood;">成功数</div>
                                 </div>
                                 <div class="col-md-4 center-block ">
-                                    <div id="totalRunning"  style="font-size:30px; font-weight:bold;color:blue;">225</div>
+                                    <div id="totalRunning" style="font-size:30px; font-weight:bold;color:blue;">225</div>
                                     <div style="font-size:20px; color: burlywood;">待处理</div>
                                 </div>
                                 <div class="col-md-4 center-block ">
-                                    <div  id="totalFall" style="font-size:30px; font-weight:bold;color:blue;">225</div>
+                                    <div id="totalFall" style="font-size:30px; font-weight:bold;color:blue;">225</div>
                                     <div style="font-size:20px; color: burlywood;">失败数</div>
                                 </div>
 
-                                <table id="handledata" style="width:100%;height:250px">
+                                <table id="handledata" style="width:100%;height:300px">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th data-options="field:'YWRQ',width:80" align="center">日期</th>
-                                            <th data-options="field:'BT',width:150" align="center">标题</th> 
-                                            <th data-options="field:'FSJQ',width:100" align="center">发起机构</th> 
+                                            <th data-options="field:'BT',width:150" align="center">标题</th>
+                                            <th data-options="field:'FSJQ',width:100" align="center">发起机构</th>
                                             <th data-options="field:'YWZT',width:90" align="center">状态</th>
                                         </tr>
                                     </thead>
                                 </table>
                             </div>
                             <div class="col-md-5">
+                                <ul id="Ul1" class="nav nav-pills ">
+                                    <li role="presentation"><a href="#">2016</a></li>
+                                    <li role="presentation"><a href="#">2017</a></li>
+                                    <li role="presentation"><a href="#">2018</a></li>
+                                    <li role="presentation" class="active"><a href="#">2019</a></li>
+                                </ul>
                                 <!-- Tab panes -->
                                 <div class="chart tab-pane" id="chart" style="position: relative; height: 350px;"></div>
 
@@ -573,10 +629,10 @@
                                     <span class="glyphicon-class">设置</span>
                                 </li>
 
-                                 
+
                             </ul>
                         </div>
-                        </div>
+                    </div>
 
 
                 </div>
