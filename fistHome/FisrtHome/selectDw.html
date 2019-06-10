@@ -1,0 +1,370 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>选择组织机构</title>
+    <link href="bootstrsp3.7/css/bootstrap.css" rel="stylesheet" />
+    <script src="bootstrsp3.7/jquery.min.js"></script>
+    <script src="bootstrsp3.7/bootstrap.min.js"></script>
+
+    <!--<link href="location/css.css" rel="stylesheet" />-->
+    <!--<script src="location/location.js"></script>-->
+    <style>
+        li {
+            float: left;
+            margin: 10px;
+            list-style: none outside none;
+            color: #666666;
+            font: 12px/150% Arial,Verdana,"宋体";
+        }
+
+        a {
+            font-weight: bold
+        }
+    </style>
+</head>
+<body style="margin:30px">
+
+
+    <div style="bider">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs panel" style="background-color:#f5f5f5" role="tablist">
+            <li role="presentation" class="active"><a id="one" href="#home" aria-controls="home" role="tab" data-toggle="tab">市级部门</a></li>
+            <li role="presentation"><a id="two" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">社会组织</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home">
+                <ul id="area1"></ul>
+                <div class="clearfix"></div>
+                <div class="panel panel-default qj">
+                    <div class="panel-heading">区级</div>
+                    <div class="panel-body">
+
+                        <ul id="area3">
+                         
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="panel panel-default  qj">
+                    <div class="panel-heading">区级部门</div>
+                    <div class="panel-body">
+
+                        <ul id="area4">
+                           
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="panel panel-default  qj">
+                    <div class="panel-heading">街道</div>
+                    <div class="panel-body">
+
+                        <ul id="area5">
+                           
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+
+                <ul id="area2">
+
+                    <li>
+
+                    </li>
+
+                </ul>
+                <div class="clearfix"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">社会组织</div>
+                    <div class="panel-body">
+
+                        <ul id="area6"></ul>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        var data = [];
+        var hash = {};
+        var transfw = [];
+        var currentq = "";
+        var conshzz = false, conJzsjbm = false, canQj = false, canJD = false, isqs = false, isqq = false;
+        $(function () {
+            $.get("getTransFw.ashx", function (d) {
+                transfw = JSON.parse(d);
+                currentq = transfw.DeptWbs;
+                for (var i = 0; i < transfw.count; i++) {
+                    var onefw = transfw.data[i];
+                    if (onefw.LXBH === "GS") {
+                        conJzsjbm = true;
+                        break;
+                    }
+                }
+
+                for (var i = 0; i < transfw.count; i++) {
+                    var onefw = transfw.data[i];
+                    if (onefw.LXBH === "SHGS") {
+                        conshzz = true;
+                        break;
+                    }
+                }
+                for (var i = 0; i < transfw.count; i++) {
+                    var onefw = transfw.data[i];
+                    if (onefw.LXBH === "FGS") {
+                        canQj = true;
+                        break;
+                    }
+                }
+                for (var i = 0; i < transfw.count; i++) {
+                    var onefw = transfw.data[i];
+                    if (onefw.LXBH === "ZGS") {
+                        canJD = true;
+                        break;
+                    }
+                }
+                for (var i = 0; i < transfw.count; i++) {
+                    var onefw = transfw.data[i];
+                    if (onefw.LXBH === "FGS" && onefw.JBBH=="1") {
+                        isqs = true;
+                        break;
+                    }
+                }
+               
+                
+                for (var i = 0; i < transfw.count; i++) {
+                    var onefw = transfw.data[i];
+                    if (onefw.JBBH == "2" &&  onefw.LXBH === "ZGS" ) {
+                        isqq = true;
+                        break;
+                    }
+                }
+                if (!conJzsjbm && !canQj) {
+                    $("#one").hide();
+                }
+                if (!conshzz) {
+                    $("#two").hide();
+                }
+                if (!canQj) {
+                    $(".qj").hide();
+                }
+                $.get("getdw.ashx", function (d) {
+                    d = JSON.parse(d);
+                    data = d.data;
+                    var html = "";
+                    loadSJBM(data[0]);
+                    loadSHZJ(data[0]);
+                    loadQJ(data[0]);
+                    hideChild();  
+                    if (getQueryString("showtype") == "1") {
+                        $("#two").hide();
+                    } else if (getQueryString("showtype") == "2") {
+                        $("#two").trigger("click");
+                        $("#one").hide();
+                    }
+                    
+                });
+            });
+          
+
+
+            $("#area3,#area2").on("click", "a", function () {
+
+                var id = $(this).attr("data-value");
+                var level = $(this).attr("level");
+                if (hash[id].childs && hash[id].childs.length > 0) {
+                    if ($(this).parent().parent().attr("id") == "area2") {
+                        var hasOther = false;
+                        for (var i = 0; i < hash[id].childs.length; i++) {
+                            if (hash[id].childs[i].typeid!="BM") {
+                                hasOther = true;
+                                break;
+                            }
+                        }
+                        if (hasOther == false) {
+                            var id = $(this).attr("data-value");
+                            var data = hash[id];
+                            window.opener.window.setDW(data);
+                            close();
+                        }
+                    }
+                    loadChild(hash[id], 3 + 1);
+                } else {
+                    if ($(this).parent().parent().attr("id") =="area2") {
+                        var id = $(this).attr("data-value");
+                        var data = hash[id];
+                        window.opener.window.setDW(data);
+                        close();
+                    }
+                }
+                return false;
+
+            });
+            $("#area1,#area4,#area5,#area6").on("click", "a", function () {
+
+                var id = $(this).attr("data-value");
+                var data = hash[id];
+                window.opener.window.setDW(data);
+                close();
+
+                return false;
+
+            });
+
+
+        });
+        //加载市级部门
+        function loadSJBM(parent) {
+            var childsdata = [];
+           
+            if (conJzsjbm) {
+                if (parent.childs && parent.childs.length > 0) {
+
+                    for (var i = 0; i < parent.childs.length; i++) {
+                        if (parent.childs[i].typename == "集团") {
+                            for (var j = 0; j < parent.childs[i].childs.length; j++) {
+                                childsdata.push(parent.childs[i].childs[j]);
+                            }
+                        }
+                    }
+                }
+                appendChild(1, childsdata);
+            }
+           
+        }
+        //加载社会组织
+        function loadSHZJ(parent) {
+           
+            if (conshzz) {
+                var childsdata = [];
+                if (parent.childs && parent.childs.length > 0) {
+
+
+                    for (var i = 0; i < parent.childs.length; i++) {
+                        if (parent.childs[i].typename == "社会组织") {
+                            for (var j = 0; j < parent.childs[i].childs.length; j++) {
+                                childsdata.push(parent.childs[i].childs[j]);
+                            }
+                        }
+                    }
+                }
+                appendChild(2, childsdata);
+            }
+           
+
+        }
+
+        function loadQJ(parent) {
+            var childsdata = [];
+          
+            if (canQj) {
+                if (parent.childs && parent.childs.length > 0) {
+
+
+                    for (var i = 0; i < parent.childs.length; i++) {
+                        if (parent.childs[i].typename == "区级") {
+                            if (isqs) {
+                                childsdata.push(parent.childs[i]);
+                            } else if (isqq) {
+                                if (currentq.indexOf(parent.childs[i].DeptWBS)==0) {
+                                    childsdata.push(parent.childs[i]);
+                                    break;
+                                }
+                              
+                            }
+                          
+                        }
+                    }
+                }
+                appendChild(3, childsdata);
+            }
+           
+
+        }
+        function loadChild(parent, level) {
+
+            var childsdata = [];
+            if (parent.childs && parent.childs.length > 0) {
+
+              
+                if (parent.typename == "区级") {
+                    hideChild();
+                   
+                    for (var i = 0; i < 2 && i < parent.childs.length; i++) {
+                        var mid = parent.childs[i];
+                        if (mid.typename == "区级1") {
+                            //加载其区级部门
+                             
+                                
+                                childsdata = mid.childs;
+                                appendChild(4, childsdata);
+                           
+                           
+                        } else
+                            if (mid.typename == "区级2") {
+                                if (canJD) {
+                                    //加载其街道
+                                    childsdata = mid.childs;
+                                    if (isqq) {
+                                      
+                                        if (currentq.indexOf(parent.DeptWBS) == 0) {
+                                            
+                                           
+                                        } else { childsdata = [];}
+
+                                    }
+                                    appendChild(5, childsdata);
+                                }
+                              
+                            }
+                    }
+                    return;
+                } else {
+                    //加载社会组织
+                    childsdata = parent.childs;
+
+                    appendChild(6, childsdata);
+                } 
+            }
+        }
+        function appendChild(level, childsdata) {
+            var html = "";
+
+
+            for (var i = 0; i < childsdata.length; i++) {
+                var one = childsdata[i];
+
+                hash[one.autoid] = one;
+                var tem = ' <li><a href="#" level="' + level + '" data-path="' + one.DeptWBS + '" data-value="' + one.autoid + '">' + one.DeptAbbr + '</a></li>';
+
+                html += tem;
+            }
+            $("#area" + level).html(html).parent().parent().show();
+
+        }
+        function hideChild() {
+            $("#area4,#area5").parent().parent().hide();
+
+
+
+        }
+
+
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+    </script>
+</body>
+
+</html>

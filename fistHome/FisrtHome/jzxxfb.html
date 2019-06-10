@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>救助发布</title>
+    <link href="bootstrsp3.7/css/bootstrap.css" rel="stylesheet" />
+    <link href="easyui1.6/themes/material/easyui.css" rel="stylesheet" />
+    <script src="bootstrsp3.7/jquery.min.js"></script>
+    <script src="bootstrsp3.7/bootstrap.min.js"></script>
+    <script src="easyui1.6/jquery.easyui.min.js"></script>
+    <script src="bootstrsp3.7/echarts.min.js"></script>
+    <style type="text/css">
+        .bs-glyphicons {
+            margin-right: 0;
+            margin-left: 0;
+        }
+
+        .bs-glyphicons {
+            margin: 0 -10px 20px;
+            overflow: hidden;
+        }
+
+            .bs-glyphicons li {
+                width: 12.5%;
+                font-size: 12px;
+            }
+
+            .bs-glyphicons li {
+                float: left;
+                display: block;
+                width: 25%;
+                height: 115px;
+                padding: 10px;
+                font-size: 10px;
+                line-height: 1.4;
+                text-align: center;
+                background-color: #f9f9f9;
+                border: 1px solid #fff;
+            }
+
+            .bs-glyphicons .glyphicon {
+                margin-top: 5px;
+                margin-bottom: 10px;
+                font-size: 24px;
+            }
+
+        .glyphicon {
+            position: relative;
+            top: 1px;
+            display: inline-block;
+            font-family: 'Glyphicons Halflings';
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .bs-glyphicons .glyphicon-class {
+            display: block;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        ..col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4,
+        .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+            padding-left: 1px;
+            padding-right: 1px;
+        }
+
+        .col-md-6, .col-md-12 {
+            padding-left: 1px;
+            padding-right: 1px;
+        }
+    </style>
+    <script type="text/javascript">
+
+        var panelHeight = "330px";
+        var rowcount = 5;
+        //格式化日期，仅年月
+        function myformatter(date) {
+            //获取年份
+            var y = date.getFullYear();
+            //获取月份
+            var m = date.getMonth() + 1;
+            return y + '-' + m;
+        }
+        $(function () {
+
+            
+            loadCategoryData();
+        });
+
+
+        function loadCategoryData() {
+
+            $.get("getjzfl.ashx", function (d) {
+                d = JSON.parse(d);
+
+
+                var html = '' ;
+                var count = d.total;
+                //计算创建几个板块
+                var rowcount = count / 2;
+                var n = count % 2;
+                if (n > 0) {
+                    rowcount++;
+                }
+                var totalcount = 0, jjnc = 0, lsjzc = 0, zbc = 0, zjc = 0;
+                var ri = 0;
+                var i = 0;
+                for (var ri = 0; ri < rowcount; ri++) {
+                    var rowhtml = ' <div class="row">';
+                    for (var k = 0; k < 2; k++) {
+                        if (i < count) {
+
+                            var one = d.rows[i];
+                            var colHtml = '<div class="col-md-6"><div class="panel panel-info"><div class="panel-heading">' + one.LBMC
+                                + '<span style="float:right"><a target="_blank" categorName="' + one.LBMC + '" categoryid="' + one.LBBH + '">更多>></a></span></div>';
+
+                            colHtml += ' <div class="panel-body"  id="c' + one.LBBH + '" style="height:' + panelHeight + '">';
+                            colHtml += '  </div> </div></div>';
+                            rowhtml += colHtml;
+                            i++;
+                        }
+                    }
+                    rowhtml += "</div>";
+                    html += rowhtml;
+                }
+                $("#container").html(html);
+                for (var i = 0; i < count; i++) {
+                    var one = d.rows[i];
+                    loadData(one.LBBH, one.LBMC );
+                }
+            }); 
+             
+        }
+        function loadData(categorid, categorName) {
+
+            $.get("getjzxxfbbylb.ashx", { categorid: categorid, categorName: categorName, rowcount: rowcount}, function (d) {
+                d = JSON.parse(d);
+
+                var html = ' <div class="col-md-3">';
+                var count = d.total; 
+                if (count>0) {
+                    one = d.rows[0];
+                    html += ' <img class="s-news-img" src="sysFolder/Common/FileDown.aspx?fileId=' + one.attachId + '&loginkey=admin" style="margin-top:50px;margin-left:5px;margin-right:5px;" height="119" width="100%">';
+                    
+                }
+                html += ' </div><div class="col-md-9"> <div class="list-group">';
+              
+                for (var i = 0; i < count; i++) {
+                    var one = d.rows[i];
+                    html += '<a target="_blank"  href="Workasp/News/jzfbread.aspx?newsId='+one._AutoID+'"  class="list-group-item">[' + one.IssueDept + ']' + one.Title + '          ' + one.IssueTime.substring(0,10) + '</a>'; 
+                }
+                html += ' </div> </div>';
+                $("#c" + d.categorid).html(html);
+            });
+
+          
+        }
+       
+      
+    </script>
+</head>
+<body>
+    <div id="container" class="container-fluid">
+       
+    </div>
+</body>
+</html>

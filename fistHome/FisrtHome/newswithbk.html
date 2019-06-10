@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>新闻（代查询条件的）</title>
+        <link href="bootstrsp3.7/css/bootstrap.css" rel="stylesheet" />
+        <script src="bootstrsp3.7/jquery.min.js"></script>
+        <script src="bootstrsp3.7/bootstrap.min.js"></script>
+        <link href="easyui1.6/themes/material/easyui.css" rel="stylesheet" />
+        <script src="easyui1.6/jquery.easyui.min.js"></script>
+        <!--<link href="location/css.css" rel="stylesheet" />-->
+        <!--<script src="location/location.js"></script>-->
+        <style>
+            li {
+                float: left;
+                margin: 10px;
+                list-style: none outside none;
+                color: #666666;
+                font: 12px/150% Arial,Verdana,"宋体";
+            }
+
+            a {
+                font-weight: bold
+            }
+
+            .active {
+                color: #23527c;
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">新闻</div>
+                        <div class="panel-body">
+                            <div>
+
+                                <strong style="float:left; margin:10px">新闻板块:</strong>
+                                <ul id="area3">
+                                    <li><a href="#" class="active" data-value="-1">全部</a></li>
+
+                                </ul> 
+                            </div>
+                            <div class="col-md-12">
+                                <table id="dg"></table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+            var data = [];
+            var hash = {};
+            $(function () {
+
+                $.get("getCategory.ashx", function (d) {
+                    d = JSON.parse(d);
+                    data = d.data;
+                    var html = ""; 
+                    
+                    appendChild(3, data);
+                });
+
+ 
+                $("#area3 ").on("click", "a", function () {
+
+                    var id = $(this).attr("data-value");
+                    var data = hash[id];
+                    $(this).parent().parent().find("a").removeClass("active");
+                    $(this).addClass("active");
+                 
+                    loadData();
+                    return false;
+
+                });
+
+
+            });
+         
+
+          
+           
+            function appendChild(level, childsdata) {
+                var html = '<li><a href="#" class="active" deptcode="-1"  data-value="-1">全部</a></li>';
+
+
+                for (var i = 0; i < childsdata.length; i++) {
+                    var one = childsdata[i]; 
+                    var tem = ' <li><a href="#" level="' + level + '"    data-value="' + one._AutoID + '">' + one.ItemName + '</a></li>';
+
+                    html += tem;
+                }
+                $("#area" + level).html(html);
+
+            }
+
+            function getQueryString(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+
+
+            function loadData() {
+
+              
+               
+                var jd = $("#area5").find(".active").text();
+                if (jd=="全部") {
+                    jd = "";
+                }
+                var quryconditon = { categorName: jd};
+                
+                $('#dg').datagrid({
+                    url: 'getNewListByCategory.ashx',
+                    queryParams: quryconditon, idField: "_AutoID",
+                    pageList: [10, 15, 20, 30, 40, 50],
+                    pagination: true, rownumbers: true, pageSize: 15,
+                    columns: [[
+                        { field: 'Title', title: '标题', width: "100%" },
+
+                    ]]
+                })
+            }
+        </script>
+    </body>
+
+</html>

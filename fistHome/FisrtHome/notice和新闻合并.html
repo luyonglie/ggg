@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>通知公告</title>
+    <link href="bootstrsp3.7/css/bootstrap.css" rel="stylesheet" />
+    <script src="bootstrsp3.7/jquery.min.js"></script>
+    <script src="bootstrsp3.7/bootstrap.min.js"></script>
+    <link href="easyui1.6/themes/material/easyui.css" rel="stylesheet" />
+    <script src="easyui1.6/jquery.easyui.min.js"></script>
+    <!--<link href="location/css.css" rel="stylesheet" />-->
+    <!--<script src="location/location.js"></script>-->
+    <style>
+        li {
+            float: left;
+            margin: 10px;
+            list-style: none outside none;
+            color: #666666;
+            font: 12px/150% Arial,Verdana,"宋体";
+        }
+
+        a {
+            font-weight: bold
+        }
+    </style>
+</head>
+<body style="margin:30px">
+
+
+    <div style="bider">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs panel" style="background-color:#f5f5f5" role="tablist">
+            <li role="presentation" class="active"><a id="one" href="#home" aria-controls="home" role="tab" data-toggle="tab">新闻</a></li>
+            <li role="presentation"><a id="two" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">通知公告</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home">
+                <table id="news"></table>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <table id="notice"></table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        var i = 1;
+        $(function () {
+
+            $('#news').datagrid({
+                url: 'getNewListByCategory.ashx',
+                idField: "_AutoID",
+                pageList: [10, 15, 20, 30, 40, 50], singleSelect: true,
+                pagination: true, rownumbers: true, pageSize: 15,
+                columns: [[
+                    { field: 'Title', title: '标题', width: "100%" },
+
+                ]]
+            });
+            $("#two").click(function () {
+
+                if (i===1) {
+                    i = 0;
+                   
+                    $('#notice').datagrid({
+                        url: 'getNoticeByPage.ashx',
+                        idField: "_AutoID", singleSelect: true,
+                        pageList: [10, 15, 20, 30, 40, 50],
+                        width: $(".tab-content").width() ,
+                        pagination: true, rownumbers: true, pageSize: 15,
+                        columns: [[
+                            { field: 'Title', title: '标题', width: "100%" },
+
+                        ]]
+                    });
+                }
+            });
+           
+           
+
+
+        });
+       
+    </script>
+</body>
+
+</html>

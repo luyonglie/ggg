@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>救助公示</title>
+    <link href="bootstrsp3.7/css/bootstrap.css" rel="stylesheet" />
+    <script src="bootstrsp3.7/jquery.min.js"></script>
+    <script src="bootstrsp3.7/bootstrap.min.js"></script>
+    <link href="easyui1.6/themes/material/easyui.css" rel="stylesheet" />
+    <script src="easyui1.6/jquery.easyui.min.js"></script>
+    <!--<link href="location/css.css" rel="stylesheet" />-->
+    <!--<script src="location/location.js"></script>-->
+    <style>
+        li {
+            float: left;
+            margin: 10px;
+            list-style: none outside none;
+            color: #666666;
+            font: 12px/150% Arial,Verdana,"宋体";
+        }
+
+        a {
+            font-weight: bold
+        }
+
+        .active {
+            color: #23527c;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">救助公示</div>
+                    <div class="panel-body" >
+                        <div  >
+
+                            <strong style="float:left; margin:10px">区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级:</strong>
+                            <ul id="area3">
+                                <li><a href="#" class="active" data-value="-1">全部</a></li>
+
+                            </ul>
+                            <div class="clearfix"></div>
+
+                            <strong style="float:left; margin:10px">区级部门:</strong>
+                            <ul id="area4">
+                                <li><a href="#" class="active" data-value="-1">全部</a></li>
+
+                            </ul>
+                            <div class="clearfix"></div>
+                            <strong style="float:left; margin:10px">街&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;道:</strong>
+                            <ul id="area5">
+                                <li><a href="#" class="active" data-value="-1">全部</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-12">
+                            <table id="dg"></table>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+           
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        var data = [];
+        var hash = {};
+        $(function () {
+
+            $.get("getdw.ashx", function (d) {
+                d = JSON.parse(d);
+                data = d.data;
+                var html = "";
+
+                loadQJ(data[0]);
+                /*
+                loadSJBM(data[0]);
+                loadSHZJ(data[0]);
+                hideChild();
+                if (getQueryString("showtype") == "1") {
+                $("#two").hide();
+                } else if (getQueryString("showtype") == "2") {
+                $("#two").trigger("click");
+                $("#one").hide();
+                }
+                */
+                loadData();
+            });
+
+
+            $("#area3").on("click", "a", function () {
+
+                var id = $(this).attr("data-value");
+                var level = $(this).attr("level");
+                var parent = null;
+
+                if (id == "-1") {
+
+                } else {
+                    parent = hash[id]
+
+                }
+
+                loadChild(parent, 3 + 1);
+
+                return false;
+
+            });
+            $("#area3,#area4,#area5").on("click", "a", function () {
+
+                var id = $(this).attr("data-value");
+                var data = hash[id];
+                $(this).parent().parent().find("a").removeClass("active");
+                $(this).addClass("active");
+                var parentid = $(this).parent().parent().attr("id");
+                if (parentid == "area4") {
+                    $("#area5").find("a").removeClass("active");
+                } else if (parentid == "area5") {
+                    $("#area4").find("a").removeClass("active");
+                }
+                loadData();
+                return false;
+
+            });
+
+
+        });
+        //加载市级部门
+        function loadSJBM(parent) {
+            var childsdata = [];
+            if (parent.childs && parent.childs.length > 0) {
+
+                for (var i = 0; i < parent.childs.length; i++) {
+                    if (parent.childs[i].typename == "集团") {
+                        for (var j = 0; j < parent.childs[i].childs.length; j++) {
+                            childsdata.push(parent.childs[i].childs[j]);
+                        }
+                    }
+                }
+            }
+            appendChild(1, childsdata);
+        }
+        //加载社会组织
+        function loadSHZJ(parent) {
+            var childsdata = [];
+            if (parent.childs && parent.childs.length > 0) {
+
+
+                for (var i = 0; i < parent.childs.length; i++) {
+                    if (parent.childs[i].typename == "社会组织(总)") {
+                        for (var j = 0; j < parent.childs[i].childs.length; j++) {
+                            childsdata.push(parent.childs[i].childs[j]);
+                        }
+                    }
+                }
+            }
+            appendChild(2, childsdata);
+
+        }
+
+        function loadQJ(parent) {
+            var childsdata = [];
+            if (parent.childs && parent.childs.length > 0) {
+
+
+                for (var i = 0; i < parent.childs.length; i++) {
+                    if (parent.childs[i].typename == "区级") {
+                        childsdata.push(parent.childs[i]);
+                    }
+                }
+            }
+            appendChild(3, childsdata);
+
+        }
+        function loadChild(parent, level) {
+
+            var childsdata = [];
+
+            if (parent && parent.childs && parent.childs.length > 0) {
+
+
+
+                if (parent.typename == "区级") {
+
+                    for (var i = 0; i < 2 && i < parent.childs.length; i++) {
+                        var mid = parent.childs[i];
+                        if (mid.typename == "区级1") {
+                            //加载其区级部门
+                            childsdata = mid.childs;
+                            appendChild(4, childsdata);
+                        } else
+                            if (mid.typename == "区级2") {
+                                //加载其街道
+                                childsdata = mid.childs;
+
+                                appendChild(5, childsdata);
+                            }
+                    }
+                    return;
+                } else {
+                    //加载社会组织
+                    childsdata = parent.childs;
+
+                    appendChild(6, childsdata);
+                }
+            } else {
+
+                appendChild(4, childsdata);
+                appendChild(5, childsdata);
+            }
+        }
+        function appendChild(level, childsdata) {
+            var html = '<li><a href="#" class="active" deptcode="-1"  data-value="-1">全部</a></li>';
+
+
+            for (var i = 0; i < childsdata.length; i++) {
+                var one = childsdata[i];
+
+                hash[one.autoid] = one;
+                var tem = ' <li><a href="#" level="' + level + '" data-path="' + one.DeptWBS + '" deptcode="' + one.DeptCode+'"  data-value="' + one.autoid + '">' + one.DeptAbbr + '</a></li>';
+
+                html += tem;
+            }
+            $("#area" + level).html(html);
+
+        }
+
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+
+        function loadData() {
+
+            var qu = $("#area3").find(".active").attr("deptcode");
+            var qubm = $("#area4").find(".active").attr("data-value");
+            var jd = $("#area5").find(".active").attr("data-value");
+            var quryconditon = {};
+            if (qu && qu !="-1") {
+                quryconditon.qu = qu;
+            }
+            if (qubm && qubm != "-1") {
+                quryconditon.qubm = qubm;
+            }
+            if (jd && jd != "-1") {
+                quryconditon.jd = jd;
+            }
+            var height = $(window).height() - $("body").height();
+            $('#dg').datagrid({
+                url: 'getJZGS.ashx',
+                queryParams: quryconditon, idField:"_AutoID",
+                pageList: [10, 15, 20, 30, 40, 50], height: height, singleSelect: true,
+                pagination: true, rownumbers: true, pageSize: 15,
+                columns: [[
+                    {
+                        field: 'Title', title: '标题', width: "100%", formatter: function (value, row, index) {
+                            return '<a  target="_blank" href="Workasp/News/jzgsread.aspx?newsId=' + row._AutoID + '" >' + value + '</a>';
+
+                        } },
+
+                ]]
+            })
+        }
+    </script>
+</body>
+
+</html>
